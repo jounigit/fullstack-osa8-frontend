@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useQuery } from 'react-apollo-hooks'
+import { useQuery, useMutation } from 'react-apollo-hooks'
 // import { useApolloClient } from 'react-apollo-hooks'
 import { gql } from 'apollo-boost'
 import Authors from './components/Authors'
@@ -22,6 +22,22 @@ const ALL_BOOKS = gql`
     title
     author
     published
+  }
+}
+`
+
+const CREATE_BOOK = gql`
+mutation createBook($title: String!, $author: String!, $published: String!, $genre: String) {
+  addPerson(
+    title: $title,
+    author: $author,
+    published: $published,
+    genre: $genre
+  ) {
+    title
+    author
+    published
+    genre
   }
 }
 `
