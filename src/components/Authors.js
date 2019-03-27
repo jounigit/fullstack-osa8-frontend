@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Books = (props) => {
+const Authors = (props) => {
   if (!props.show) {
     return null
   }
@@ -9,34 +9,34 @@ const Books = (props) => {
     return <div>loading...</div>
   }
 
-  const books = props.result.data.allBooks
+  const authors = props.result.data.allAuthors
 
   return (
     <div>
-      <h2>books</h2>
-
+      <h2>authors</h2>
       <table>
         <tbody>
           <tr>
             <th></th>
             <th>
-              author
+              born
             </th>
             <th>
-              published
+              books
             </th>
           </tr>
-          {books.map(a =>
-            <tr key={a.title}>
-              <td>{a.title}</td>
-              <td>{a.author}</td>
-              <td>{a.published}</td>
+          {authors.map(a =>
+            <tr key={a.name}>
+              <td>{a.name}</td>
+              <td>{a.born}</td>
+              <td>{a.bookCount}</td>
             </tr>
           )}
         </tbody>
       </table>
+
     </div>
   )
 }
 
-export default Books
+export default Authors
