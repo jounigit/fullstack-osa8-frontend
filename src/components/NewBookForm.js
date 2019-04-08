@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const NewBook = (props) => {
+const NewBookForm = (props) => {
   const [title, setTitle] = useState('')
   const [author, setAuhtor] = useState('')
   const [published, setPublished] = useState('')
@@ -73,4 +73,4 @@ const NewBook = (props) => {
   )
 }
 
-export default NewBook
+export default NewBookForm
