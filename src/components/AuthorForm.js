@@ -1,45 +1,63 @@
 import React, { useState } from 'react'
 
 const AuthorForm = (props) => {
-  const [name, setName] = useState('')
   const [setBornTo, setBorn] = useState('')
+  const [selectedOption, setSelectedOption] = useState('')
+
+  const names = props.names.data.allAuthors
 
   const submit = async (e) => {
     e.preventDefault()
 
-    console.log('edit...', name, setBornTo)
-
+    let name = selectedOption
     await props.editAuthor({
       variables: { name, setBornTo }
     })
 
-    setName('')
+    setSelectedOption('')
     setBorn('')
   }
 
-  return (
-    <div>
-      <form onSubmit={submit}>
-        <div>
-          name
-          <input
-            value={name}
-            onChange={({ target }) => setName(target.value)}
-          />
-        </div>
-        <div>
-          born
-          <input
-            type='number'
-            value={setBornTo}
-            onChange={({ target }) => setBorn(parseInt(target.value))}
-          />
-        </div>
+ console.log(`Option selected:`, selectedOption)
 
-        <button type='submit'>edit born</button>
-      </form>
-    </div>
-  )
+  if (names) {
+    return (
+      <div>
+      
+        <form onSubmit={submit}>
+          <div>          
+              name
+              <select 
+                value={selectedOption}
+                onChange={({ target }) => setSelectedOption(target.value)}
+              >
+                {names.map(a => 
+                  <option key={a.name} value={a.name}>{a.name}</option>
+                )}
+              </select>
+            
+          </div>
+          <div>
+            born
+            <input
+              type='number'
+              value={setBornTo}
+              onChange={({ target }) => setBorn(parseInt(target.value))}
+            />
+          </div>
+
+          <button type='submit'>edit born</button>
+        </form>
+      </div>
+    )
+  }
+  return (
+  <div>
+    <p>loading... </p>
+  </div>
+)
 }
+
+
 
 export default AuthorForm

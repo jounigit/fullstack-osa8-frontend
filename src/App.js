@@ -16,6 +16,13 @@ const ALL_AUTHORS = gql`
   }
 }
 `
+const ALL_AUTHORS_NAME = gql`
+{
+  allAuthors  {
+    name
+  }
+}
+`
 
 const ALL_BOOKS = gql`
 {
@@ -61,6 +68,7 @@ const App = () => {
   const [page, setPage] = useState('authors')
 
   const resultAuthors = useQuery(ALL_AUTHORS)
+  const resultAuthorsName = useQuery(ALL_AUTHORS_NAME)
   const resultBooks = useQuery(ALL_BOOKS)
 
   const addBook = useMutation(CREATE_BOOK, {
@@ -69,6 +77,8 @@ const App = () => {
   const editAuthor = useMutation(EDIT_AUTHOR, {
     refetchQueries: [{ query: ALL_AUTHORS }]
   })
+
+  //console.log('Names: ', resultAuthorsName)
 
   return (
     <div>
@@ -94,7 +104,10 @@ const App = () => {
       />
 
       <h2>edit author</h2>
-      <AuthorForm editAuthor = {editAuthor} />
+      <AuthorForm 
+        editAuthor = {editAuthor}
+        names = {resultAuthorsName}
+       />
 
     </div>
   )
