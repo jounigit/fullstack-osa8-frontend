@@ -4,6 +4,10 @@ const AuthorForm = (props) => {
   const [setBornTo, setBorn] = useState('')
   const [selectedOption, setSelectedOption] = useState('')
 
+  if (!props.show) {
+    return null
+  }
+
   const names = props.names.data.allAuthors
 
   const submit = async (e) => {
@@ -23,6 +27,8 @@ const AuthorForm = (props) => {
   if (names) {
     return (
       <div>
+
+        <h2>edit author</h2>
       
         <form onSubmit={submit}>
           <div>          

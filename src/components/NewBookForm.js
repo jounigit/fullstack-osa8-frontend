@@ -16,9 +16,13 @@ const NewBookForm = (props) => {
 
     console.log('add book...', title, author, published, genres)
 
+   try {
     await props.addBook({
       variables: { title, author, published, genres }
     })
+   } catch(error){
+    console.log('VIRHE FRONTISSA', error)
+  }
 
     setTitle('')
     setPublished('')
@@ -34,6 +38,9 @@ const NewBookForm = (props) => {
 
   return (
     <div>
+
+      <h2>new book</h2>
+
       <form onSubmit={submit}>
         <div>
           title
