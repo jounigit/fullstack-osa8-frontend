@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 const AuthorForm = (props) => {
   const [setBornTo, setBorn] = useState('')
   const [selectedOption, setSelectedOption] = useState('')
+  const [message, setMessage] = useState('')
 
   if (!props.show) {
     return null
@@ -14,9 +15,15 @@ const AuthorForm = (props) => {
     e.preventDefault()
 
     let name = selectedOption
-    await props.editAuthor({
-      variables: { name, setBornTo }
-    })
+
+    try {
+        await props.editAuthor({
+          variables: { name, setBornTo }
+        }) 
+        setMessage('Changed '+ name)
+      } catch(error){
+      console.log('VIRHE FRONTISSA:: ', error)
+    }/*  */
 
     setSelectedOption('')
     setBorn('')
@@ -27,6 +34,8 @@ const AuthorForm = (props) => {
   if (names) {
     return (
       <div>
+
+        {message ? <h2 style={{color: 'green'}}>{message}</h2> : ''}
 
         <h2>edit author</h2>
       

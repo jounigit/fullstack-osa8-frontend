@@ -14,6 +14,7 @@ const ALL_AUTHORS = gql`
     name
     born
     bookCount
+    id
   }
 }
 `
@@ -21,6 +22,16 @@ const ALL_AUTHORS_NAME = gql`
 {
   allAuthors  {
     name
+  }
+}
+`
+const FIND_AUTHOR = gql`
+query findAuthor( $name: String!){
+findAuthor( name: $name) {
+    name
+    born
+    id
+    bookCount
   }
 }
 `
@@ -35,7 +46,7 @@ const ALL_BOOKS = gql`
 `
 
 const CREATE_BOOK = gql`
-mutation createBook(
+mutation addBook(
   $title: String!,
   $author: String!,
   $published: Int!,
@@ -48,9 +59,6 @@ mutation createBook(
     genres: $genres
   ) {
     title
-    author
-    published
-    genres
   }
 }
 `
@@ -141,6 +149,7 @@ const App = () => {
         show={page === 'edit'}
         editAuthor = {editAuthor}
         names = {resultAuthorsName}
+        findAuthor = {FIND_AUTHOR}
        />
 
     </div>

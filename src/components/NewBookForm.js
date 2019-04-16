@@ -6,6 +6,7 @@ const NewBookForm = (props) => {
   const [published, setPublished] = useState('')
   const [genre, setGenre] = useState('')
   const [genres, setGenres] = useState([])
+  const [message, setMessage] = useState('')
 
   if (!props.show) {
     return null
@@ -14,15 +15,20 @@ const NewBookForm = (props) => {
   const submit = async (e) => {
     e.preventDefault()
 
-    console.log('add book...', title, author, published, genres)
+    console.log('add book react...', title, author, published, genres)
 
    try {
-    await props.addBook({
-      variables: { title, author, published, genres }
+     await props.addBook({
+      variables: { 
+        title, 
+        author, 
+        published, 
+        genres }
     })
+    setMessage('Added '+ title + ' by ' + author)
    } catch(error){
-    console.log('VIRHE FRONTISSA', error)
-  }
+    console.log('VIRHE FRONTISSA:: ', error)
+  }/*  */
 
     setTitle('')
     setPublished('')
@@ -38,6 +44,8 @@ const NewBookForm = (props) => {
 
   return (
     <div>
+
+      {message ? <h2 style={{color: 'green'}}>{message}</h2> : ''}
 
       <h2>new book</h2>
 
