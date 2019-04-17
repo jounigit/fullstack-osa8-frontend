@@ -7,6 +7,7 @@ import Books from './components/Books'
 import NewBookForm from './components/NewBookForm'
 import AuthorForm from './components/AuthorForm'
 import LoginForm from './components/LoginForm'
+import Recommend from './components/Recommend'
 
 const ALL_AUTHORS = gql`
 {
@@ -41,6 +42,14 @@ const ALL_BOOKS = gql`
   allBooks {
     title
     published
+    genres
+  }
+}
+`
+const ME = gql`
+{
+  me {
+    favoriteGenre
   }
 }
 `
@@ -98,6 +107,7 @@ const App = () => {
   const resultAuthors = useQuery(ALL_AUTHORS)
   const resultAuthorsName = useQuery(ALL_AUTHORS_NAME)
   const resultBooks = useQuery(ALL_BOOKS)
+  const resultMe = useQuery(ME)
 
   const login = useMutation(LOGIN)
   const addBook = useMutation(CREATE_BOOK, {
@@ -116,6 +126,7 @@ const App = () => {
           <span>
             <button onClick={() => setPage('add')}>add book</button>
             <button onClick={() => setPage('edit')}>edit author</button>
+            <button onClick={() => setPage('recommend')}>recommend</button>
             <button onClick={logout}>logout</button>
           </span>
            : 
@@ -132,6 +143,12 @@ const App = () => {
       <Books
         show={page === 'books'}
         result = {resultBooks}
+      />
+
+      <Recommend
+        show={page === 'recommend'}
+        books = {resultBooks}
+        me = {resultMe}
       />
 
       <NewBookForm
