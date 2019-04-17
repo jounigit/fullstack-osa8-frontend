@@ -147,8 +147,8 @@ const App = () => {
 
       <Recommend
         show={page === 'recommend'}
-        books = {resultBooks}
-        me = {resultMe}
+        resBooks = {resultBooks}
+        resMe = {resultMe}
       />
 
       <NewBookForm
