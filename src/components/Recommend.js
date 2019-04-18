@@ -6,14 +6,14 @@ const Recommend = (props) => {
         return null
     }
 
-    const books = props.resBooks.data.allBooks
+    // const books = props.resBooks.data.allBooks
 
     const genre = props.resMe.data.me.favoriteGenre
 
-    const booksA = props.resBooks.data.allBooks.filter(b => b.genres.includes(genre))
+    const books = props.resBooks.data.allBooks.filter(b => b.genres.includes(genre))
 
 
-    console.log('ME:: ', booksA )
+    console.log('ME:: ', books )
 
     return (
         <div>
@@ -29,7 +29,7 @@ const Recommend = (props) => {
                     published
                     </th>
                 </tr>
-                {booksA.map(a =>
+                {books.map(a =>
                     <tr key={a.title}>
                     <td>{a.title}</td>
                     <td>{a.published}</td>
