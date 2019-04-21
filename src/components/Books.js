@@ -1,26 +1,52 @@
 import React, {useState} from 'react'
+import { gql } from 'apollo-boost'
+import { useApolloClient } from 'react-apollo-hooks'
+
+const BOOKS_IN_GENRE = gql`
+query booksInGenre($genreToSearch: String!) {
+  allBooks(genre: $genreToSearch) {
+    title
+    published
+    genres
+  }
+}
+`
 
 const Books = (props) => {
+  const client = useApolloClient()
+
   const [genre, setGenre] = useState('')
+  const [booksInGenre, setBookInGenre] = useState(null)
 
   if (!props.show) {
     return null
   }
 
   if (props.result.loading) {
-    return <div>loading...</div>
+    return <div>loading...</div> //
+  }
+
+  const show = async (genre) => {
+    const { data } = await client.query({
+      query: BOOKS_IN_GENRE,
+      variables: { genreToSearch: genre }
+    })
+    console.log('Books In Genre:: ', data.allBooks)
+    setBookInGenre(data.allBooks)
   }
 
   const books = props.result.data.allBooks
 
   const genres = Array.from(new Set(books.map(b => b.genres ).flat()))
 
-  const booksInGenre = books.filter(b => b.genres.includes(genre))
-
-  const showBooks = genre ? booksInGenre : books
+  const showBooks = booksInGenre ? booksInGenre : books
   
   console.log('GENRES:: ', genres)
   console.log('BooksIn:: ', booksInGenre)
+
+  if (genre) {
+    show(genre)
+  }
 
   return (
     <div>
