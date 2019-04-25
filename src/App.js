@@ -132,6 +132,9 @@ const App = () => {
     }, 2000)
   }
 
+  const includedIn = (set, object) => 
+  set.map(p => p.id).includes(object.id) 
+
   const resultAuthors = useQuery(ALL_AUTHORS)
   const resultAuthorsName = useQuery(ALL_AUTHORS_NAME)
   const resultBooks = useQuery(ALL_BOOKS)
@@ -139,8 +142,20 @@ const App = () => {
 
   const login = useMutation(LOGIN)
   const addBook = useMutation(CREATE_BOOK, {
-    refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }]
+    update: (store, response) => {
+      const dataInStore = store.readQuery({ query: ALL_BOOKS })
+      const addedBook = response.data.addBook
+
+      if (!includedIn(dataInStore.allBooks, addedBook)) {
+        dataInStore.allBooks.push(addedBook)
+        client.writeQuery({
+          query: ALL_BOOKS,
+          data: dataInStore
+        })
+      }
+    }
   })
+
   const editAuthor = useMutation(EDIT_AUTHOR, {
     refetchQueries: [{ query: ALL_AUTHORS }]
   })
