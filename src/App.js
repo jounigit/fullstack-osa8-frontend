@@ -1,13 +1,25 @@
 import React, { useState, useEffect } from 'react'
 import { useQuery, useMutation } from 'react-apollo-hooks'
-import { useApolloClient } from 'react-apollo-hooks'
 import { gql } from 'apollo-boost'
+import { useApolloClient } from 'react-apollo-hooks'
+
+import { Subscription } from 'react-apollo'
+
 import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBookForm from './components/NewBookForm'
 import AuthorForm from './components/AuthorForm'
 import LoginForm from './components/LoginForm'
 import Recommend from './components/Recommend'
+
+const BOOK_DETAILS = gql`
+fragment BookDetails on Book {
+  id
+  title
+  published
+  genres
+}
+`
 
 const ALL_AUTHORS = gql`
 {
@@ -40,11 +52,10 @@ findAuthor( name: $name) {
 const ALL_BOOKS = gql`
 {
   allBooks {
-    title
-    published
-    genres
+    ...BookDetails
   }
 }
+${BOOK_DETAILS}
 `
 const ME = gql`
 {
@@ -67,9 +78,10 @@ mutation addBook(
     published: $published,
     genres: $genres
   ) {
-    title
+    ...BookDetails
   }
 }
+${BOOK_DETAILS}
 `
 
 const EDIT_AUTHOR = gql`
@@ -87,10 +99,19 @@ mutation login($username: String!, $password: String!) {
   }
 }
 `
+const BOOK_ADDED = gql`
+subscription {
+  bookAdded {
+    ...BookDetails
+  }
+}
+${BOOK_DETAILS}
+`
 
 const App = () => {
   const [page, setPage] = useState('authors')
   const [token, setToken] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   const client = useApolloClient()
 
@@ -102,6 +123,13 @@ const App = () => {
     setToken(null)
     localStorage.clear()
     client.resetStore()
+  }
+
+  const notify = (message) => {
+    setErrorMessage(message)
+    setTimeout(() => {
+      setErrorMessage(null)
+    }, 2000)
   }
 
   const resultAuthors = useQuery(ALL_AUTHORS)
@@ -117,8 +145,16 @@ const App = () => {
     refetchQueries: [{ query: ALL_AUTHORS }]
   })
 
+  const errorNotification = () => errorMessage &&
+  <div style={{ color: 'red' }}>
+    {errorMessage}
+  </div>
+
   return (
     <div>
+
+      {errorNotification()}
+
       <div>
         <button onClick={() => setPage('authors')}>authors</button>
         <button onClick={() => setPage('books')}>books</button>
@@ -168,6 +204,18 @@ const App = () => {
         names = {resultAuthorsName}
         findAuthor = {FIND_AUTHOR}
        />
+
+      <Subscription
+        subscription={BOOK_ADDED}
+        onSubscriptionData={({subscriptionData}) => {
+          console.log(subscriptionData)
+          const addedBook = subscriptionData.data.bookAdded
+          notify(`${addedBook.title} added to server`)
+          // window.alert('You are adding a new book to the list')
+        }}
+      > 
+        {() => null}
+      </Subscription>
 
     </div>
   )
